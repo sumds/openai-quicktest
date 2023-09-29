@@ -1,48 +1,84 @@
-Sure! Here are the corresponding JavaScript test cases written using the Selenium WebDriver in Chrome:
+Sure! Here are the corresponding unit test cases for the `validateLogin` function using Jest:
 
 ```javascript
-const { Builder, By, Key, until } = require('selenium-webdriver');
-const { expect } = require('chai');
+import { validateLogin } from './login';
 
-describe('Web Login Page Tests', function() {
-  let driver;
-
-  before(async function() {
-    driver = await new Builder().forBrowser('chrome').build();
+describe('validateLogin', () => {
+  test('should return an empty object if both username and password are valid', () => {
+    const result = validateLogin('john', 'p@ssword1');
+    expect(result).toEqual({});
   });
 
-  after(async function() {
-    await driver.quit();
+  test('should return an error message if username is empty', () => {
+    const result = validateLogin('', 'p@ssword1');
+    expect(result).toEqual({ username: 'Username is required.' });
   });
 
-  it('should display error if username is not provided', async function() {
-    await driver.get('https://example.com/login');
-
-    await driver.findElement(By.id('username')).sendKeys('');
-    await driver.findElement(By.id('password')).sendKeys('password');
-    await driver.findElement(By.id('login-button')).click();
-
-    const errorMsg = await driver.wait(until.elementLocated(By.className('error-username')), 5000).getText();
-    expect(errorMsg).to.equal('Username is required.');
+  test('should return an error message if username is "admin"', () => {
+    const result = validateLogin('admin', 'p@ssword1');
+    expect(result).toEqual({ username: 'Using "admin" as a username is not allowed.' });
   });
 
-  it('should display error if password is not provided', async function() {
-    await driver.get('https://example.com/login');
-
-    await driver.findElement(By.id('username')).sendKeys('username');
-    await driver.findElement(By.id('password')).sendKeys('');
-    await driver.findElement(By.id('login-button')).click();
-
-    const errorMsg = await driver.wait(until.elementLocated(By.className('error-password')), 5000).getText();
-    expect(errorMsg).to.equal('Password is required.');
+  test('should return an error message if username is less than 4 characters', () => {
+    const result = validateLogin('abc', 'p@ssword1');
+    expect(result).toEqual({ username: 'Username should be at least 4 characters.' });
   });
 
-  // Add more test cases for other validation rules as required
+  test('should return an error message if username contains spaces', () => {
+    const result = validateLogin('user name', 'p@ssword1');
+    expect(result).toEqual({ username: 'Username should not contain spaces.' });
+  });
+
+  test('should return an error message if username is purely numeric', () => {
+    const result = validateLogin('1234', 'p@ssword1');
+    expect(result).toEqual({ username: 'Username should not be purely numeric.' });
+  });
+
+  test('should return an error message if password is empty', () => {
+    const result = validateLogin('john', '');
+    expect(result).toEqual({ password: 'Password is required.' });
+  });
+
+  test('should return an error message if password is "password123"', () => {
+    const result = validateLogin('john', 'password123');
+    expect(result).toEqual({ password: 'Using "password123" as a password is too weak.' });
+  });
+
+  test('should return an error message if password is less than 8 characters', () => {
+    const result = validateLogin('john', 'p@ss1');
+    expect(result).toEqual({ password: 'Password should be at least 8 characters.' });
+  });
+
+  test('should return an error message if password contains the username', () => {
+    const result = validateLogin('john', 'p@ssword1john');
+    expect(result).toEqual({ password: 'Password should not contain the username.' });
+  });
+
+  test('should return an error message if password does not contain an uppercase letter', () => {
+    const result = validateLogin('john', 'p@ssword1');
+    expect(result).toEqual({ password: 'Password should contain at least one uppercase letter.' });
+  });
+
+  test('should return an error message if password does not contain a lowercase letter', () => {
+    const result = validateLogin('john', 'P@SSWORD1');
+    expect(result).toEqual({ password: 'Password should contain at least one lowercase letter.' });
+  });
+
+  test('should return an error message if password does not contain a number', () => {
+    const result = validateLogin('john', 'p@ssword');
+    expect(result).toEqual({ password: 'Password should contain at least one number.' });
+  });
+
+  test('should return an error message if password does not contain a special character', () => {
+    const result = validateLogin('john', 'Password1');
+    expect(result).toEqual({ password: 'Password should contain at least one special character (@, $, !, %, *, ?, &, #).' });
+  });
+
+  test('should return an error message if password contains consecutive characters or sequences', () => {
+    const result = validateLogin('john', '1234567890');
+    expect(result).toEqual({ password: 'Password should not contain consecutive characters or sequences.' });
+  });
 });
 ```
 
-Note:
-- You need to install the `selenium-webdriver` and `chai` packages for this script to work (`npm install selenium-webdriver chai`).
-- Replace `'https://example.com/login'` with the actual URL of your web login page.
-- Replace `'username'`, `'password'`, `'login-button'`, `'error-username'`, and `'error-password'` with the actual IDs or class names used in your web login page for the respective elements.
-- Add more test cases for other validation rules as required by duplicating the existing test cases and modifying the test data and expected error messages accordingly.
+These test cases cover all possible scenarios for the `validateLogin` function including both valid and invalid inputs for username and password.
