@@ -1,0 +1,48 @@
+Sure! Here are the corresponding JavaScript test cases written using the Selenium WebDriver in Chrome:
+
+```javascript
+const { Builder, By, Key, until } = require('selenium-webdriver');
+const { expect } = require('chai');
+
+describe('Web Login Page Tests', function() {
+  let driver;
+
+  before(async function() {
+    driver = await new Builder().forBrowser('chrome').build();
+  });
+
+  after(async function() {
+    await driver.quit();
+  });
+
+  it('should display error if username is not provided', async function() {
+    await driver.get('https://example.com/login');
+
+    await driver.findElement(By.id('username')).sendKeys('');
+    await driver.findElement(By.id('password')).sendKeys('password');
+    await driver.findElement(By.id('login-button')).click();
+
+    const errorMsg = await driver.wait(until.elementLocated(By.className('error-username')), 5000).getText();
+    expect(errorMsg).to.equal('Username is required.');
+  });
+
+  it('should display error if password is not provided', async function() {
+    await driver.get('https://example.com/login');
+
+    await driver.findElement(By.id('username')).sendKeys('username');
+    await driver.findElement(By.id('password')).sendKeys('');
+    await driver.findElement(By.id('login-button')).click();
+
+    const errorMsg = await driver.wait(until.elementLocated(By.className('error-password')), 5000).getText();
+    expect(errorMsg).to.equal('Password is required.');
+  });
+
+  // Add more test cases for other validation rules as required
+});
+```
+
+Note:
+- You need to install the `selenium-webdriver` and `chai` packages for this script to work (`npm install selenium-webdriver chai`).
+- Replace `'https://example.com/login'` with the actual URL of your web login page.
+- Replace `'username'`, `'password'`, `'login-button'`, `'error-username'`, and `'error-password'` with the actual IDs or class names used in your web login page for the respective elements.
+- Add more test cases for other validation rules as required by duplicating the existing test cases and modifying the test data and expected error messages accordingly.

@@ -17,15 +17,21 @@ with open(file_path, 'r') as file:
 
 #Step 2:Construct the prompt
 #By specifying "```javascript", you're helping the model to understand that the content is JavaScript code. The clearer the context you provide, the better the potential outcomes from the model.
-prompt_message = (
+prompt_messag_1 = (
     "Given the following test scenarios for a web login page, generate corresponding Selenium test cases written in Python:\n\n"
+    + file_content + "\n"
+    "Please use Chrome as the web driver and provide complete scripts."
+)
+
+prompt_message_2 = (
+    "Given the following test scenarios for a web login page, generate corresponding Javascript test cases written in Javascript:\n\n"
     + file_content + "\n"
     "Please use Chrome as the web driver and provide complete scripts."
 )
 
 messages = [
     {"role": "system", "content": "You are a helpful assistant that generates Selenium test cases based on given JavaScript code."},
-    {"role": "user", "content": prompt_message}
+    {"role": "user", "content": prompt_message_2}
 ]
 
 # Use the completion endpoint to get a response from the model
@@ -35,8 +41,6 @@ response = openai.ChatCompletion.create(
 )
 
 # Print and save the response
-
-
-output_file_path = 'output.txt'
+output_file_path = 'output-js.txt'
 with open(output_file_path, 'w', encoding="utf-8") as output_file:
     output_file.write(response.choices[0].message['content'])
