@@ -1,32 +1,52 @@
+Sure! Here are the test cases written in Python using Selenium with Chrome as the web driver:
 
+```python
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+import time
 
-Python solution:
+def test_login_validation():
+    driver = webdriver.Chrome()
 
-# test_login.py from selenium import webdriver from selenium.webdriver.common.keys import Keys from selenium.webdriver.support.ui import WebDriverWait from selenium.webdriver.support import expected_conditions as EC from rqwalton.validator import validateLogin try: driver = webdriver.Chrome() driver.get(‘http://selenium-code.com/registration’) WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, ‘[@id=\"form-username\"]’))) WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, ‘[@id=\"form-password\"]’))) element = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.CSS_SELECTOR, ‘[@value= \"Register\"]’))) WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.CSS_SELECTOR, ‘[@id= \"password\"]’))) element = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.CSS_SELECTOR, ‘[@id= \"username\"]’))) driver.find_element_by_id(‘username’).send_keys(‘rgwalton’) driver.find_element_by_id(‘password’).send_keys(‘password’) WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.CSS_SELECTOR, ‘[@id= \"login\"]’))) WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.CSS_SELECTOR, ‘[@id= \"openid\"]’))) element = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.CSS_SELECTOR, ‘[@id= \"loginbtn\"]’))) WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.CSS_SELECTOR, ‘[@value= \"Login\"]’))) WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.CSS_SELECTOR, ‘[@id= \"login_error\"]’))) WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, ‘[@id= \"xko_form_fname_invalid\"]’))) page.driver.find_element_by_id(‘username’).clear page.driver.find_element_by_id(‘password’).clear page.driver.find_element_by_id(‘login’).click() page.driver.find_element_by_id(‘openid’).click() page.driver.find_element_by_id(‘loginbtn’).click() element = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.CSS_SELECTOR, ‘[@value= \"Register\"]’))) element = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.CSS_SELECTOR, ‘[@id= \"page_not_found\"]’))) WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, ‘[@id= \"user\"]’))) WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.CSS_SELECTOR, ‘[@id= \"page_not_found\"]’))) print(‘\n Settings to validate the web login page \(fill in link name to be validated).
+    # Test case 1 - Empty username and password
+    driver.get("https://www.example.com/login")
+    submit_button = driver.find_element_by_id("submit")
+    submit_button.click()
+    
+    username_error = driver.find_element_by_id("username-error").text
+    assert username_error == "Username is required.", "Username validation failed"
+    
+    password_error = driver.find_element_by_id("password-error").text
+    assert password_error == "Password is required.", "Password validation failed"
 
-’) print(‘\n Open the WebDriver console, go to about:support page and click on the WebDriver options link.’) print(‘\n Change strict contexts: to Ignore.
+    # Test case 2 - Empty username
+    driver.get("https://www.example.com/login")
+    password_field = driver.find_element_by_id("password")
+    password_field.send_keys("password123")
+    
+    submit_button = driver.find_element_by_id("submit")
+    submit_button.click()
+    
+    username_error = driver.find_element_by_id("username-error").text
+    assert username_error == "Username is required.", "Username validation failed"
 
-’) print(‘\n Reload the page.’) print(‘\n Run the test.’) if __name__ == ‘__main__’: validateLogin(driver, WebDriverWait(driver, 10).until(EC.title_present(‘WebDriver options - Google Chrome’)))
+    # Test case 3 - Empty password
+    driver.get("https://www.example.com/login")
+    username_field = driver.find_element_by_id("username")
+    username_field.send_keys("testuser")
+    
+    submit_button = driver.find_element_by_id("submit")
+    submit_button.click()
 
-WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, ‘[@value= \"Register\"]’)))
+    password_error = driver.find_element_by_id("password-error").text
+    assert password_error == "Password is required.", "Password validation failed"
 
-WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, ‘[@id= \"page_not_found\"]’)))
+    # Additional test cases can be added as required.
+    
+    driver.quit()
 
-WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.CSS_SELECTOR, ‘[@id= \"user\"]’)))
+if __name__ == "__main__":
+    test_login_validation()
+```
 
-line 1 – This imports the webdriver package, while line 2 imports the WebDriverWait within the WebDriver package to set up a 10 second delay before executing the next statement.
-
-line 3- WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.CSS_SELECTOR, ‘[@id= \"page_not_found\"]’))) – This command opens up Google Chrome with a 10 second wait time until it finds the WebDriver page with the defined CSS selector on the new page.
-
-line 4 – This command is used to find the button with the attribute value of register and WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.CSS_SELECTOR, ‘[@id= \"page_not_found\"]’))) – This command is used to find the button with the attribute value of register and ensure that the new page is loaded and available.
-
-The next steps may vary based on the Firefox, Internet Explorer or Chrome browsers that are being used; therefore it is important to make the necessary updates to ensure that the test suite runs smoothly.
-
-
-Setting up a comprehensive test
-
-
-This section outlines a ‘test_login_comprehensive.py’ file example. Not only does it test the conditions that were presented in the previous Python example, but it also tests for the presence of functional web elements under many different scenarios.
-
-
-state = {} def validateLogin(driver, state): driver.getcurrent_url = ‘http://selenium-code.com/registration’ driver.findElement(By.id = "email").clear() driver.findElement(By.id = = "email").sendKeys('contact@haratford.com') driver.findElement(By.id = = = = = "form-email").sendKeys('joe1@amazon.com') driver.findElement(By.id = "email").clear() driver.findElement(By.id = = "email").sendKeys('contact@haratford.com') driver.findElement(By.id = = "form-email").sendKeys('joe@yahoo.com') driver.findElement(By.id = "email").clear() driver.findElement(By.id = = "email").sendKeys('contact@
+Make sure to replace `"https://www.example.com/login"` with the actual URL of your web login page. Also, make sure to update the element IDs used in the test script (`"submit"`, `"username-error"`, `"password-error"`, `"username"`, `"password"`) with the actual element IDs from your login page HTML.
